@@ -12,11 +12,18 @@ import {
   TrendingUp,
   Users,
   Target,
-  DollarSign
+  DollarSign,
+  ExternalLink,
+  Activity,
+  Award,
+  Clock,
+  ArrowUpRight,
+  ArrowDownRight,
+  Bot
 } from 'lucide-react'
 import Link from 'next/link'
 
-// Mock data for the overview - replace with real data later
+// Enhanced mock data for comprehensive dashboard
 const mockMetrics = {
   visibilityScore: 48.3,
   visibilityChange: 5.5,
@@ -25,7 +32,27 @@ const mockMetrics = {
   shareOfVoiceChange: -0.1,
   totalMentions: 1247,
   mentionsChange: 12.3,
-  activePlatforms: 4
+  activePlatforms: 4,
+  citationCount: 189,
+  citationChange: 8.7,
+  avgSentiment: 0.34,
+  sentimentChange: 0.12,
+  responseRate: 73.2,
+  responseRateChange: -2.1,
+  competitorRank: 2,
+  topKeywords: ['project management', 'team collaboration', 'productivity', 'remote work'],
+  recentActivity: [
+    { platform: 'ChatGPT', mentions: 23, time: '2 hours ago', sentiment: 'positive' },
+    { platform: 'Perplexity', mentions: 8, time: '5 hours ago', sentiment: 'neutral' },
+    { platform: 'Claude', mentions: 12, time: '6 hours ago', sentiment: 'positive' },
+    { platform: 'Copilot', mentions: 5, time: '8 hours ago', sentiment: 'neutral' }
+  ],
+  platformPerformance: [
+    { platform: 'ChatGPT', score: 52.1, change: 3.2, mentions: 734 },
+    { platform: 'Perplexity', score: 43.8, change: 1.9, mentions: 312 },
+    { platform: 'Claude', score: 49.2, change: -1.4, mentions: 156 },
+    { platform: 'Copilot', score: 38.7, change: 4.8, mentions: 45 }
+  ]
 }
 
 const getStartedCards = [
@@ -147,6 +174,7 @@ export default function Overview() {
             </Button>
           </div>
 
+          {/* Primary Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Visibility Score */}
             <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -158,14 +186,15 @@ export default function Overview() {
                   <div className="text-2xl font-bold text-gray-900">
                     {mockMetrics.visibilityScore}%
                   </div>
-                  <div className="text-sm text-green-600 font-medium">
+                  <div className="text-sm text-green-600 font-medium flex items-center">
+                    <ArrowUpRight className="h-3 w-3 mr-1" />
                     +{mockMetrics.visibilityChange}%
                   </div>
                 </div>
               </div>
               <div>
                 <div className="font-medium text-gray-900">Visibility Score</div>
-                <div className="text-sm text-gray-600">Rank #{mockMetrics.visibilityRank}</div>
+                <div className="text-sm text-gray-600">Rank #{mockMetrics.visibilityRank} overall</div>
               </div>
             </div>
 
@@ -179,7 +208,8 @@ export default function Overview() {
                   <div className="text-2xl font-bold text-gray-900">
                     {mockMetrics.shareOfVoice}%
                   </div>
-                  <div className="text-sm text-red-600 font-medium">
+                  <div className="text-sm text-red-600 font-medium flex items-center">
+                    <ArrowDownRight className="h-3 w-3 mr-1" />
                     {mockMetrics.shareOfVoiceChange}%
                   </div>
                 </div>
@@ -190,11 +220,57 @@ export default function Overview() {
               </div>
             </div>
 
-            {/* Total Mentions */}
+            {/* Citations */}
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-green-50 rounded-lg">
-                  <MessageSquare className="h-5 w-5 text-green-600" />
+                  <ExternalLink className="h-5 w-5 text-green-600" />
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-gray-900">
+                    {mockMetrics.citationCount}
+                  </div>
+                  <div className="text-sm text-green-600 font-medium flex items-center">
+                    <ArrowUpRight className="h-3 w-3 mr-1" />
+                    +{mockMetrics.citationChange}%
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="font-medium text-gray-900">Total Citations</div>
+                <div className="text-sm text-gray-600">Last 30 days</div>
+              </div>
+            </div>
+
+            {/* Sentiment Score */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-orange-50 rounded-lg">
+                  <Activity className="h-5 w-5 text-orange-600" />
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-gray-900">
+                    {mockMetrics.avgSentiment > 0 ? '+' : ''}{(mockMetrics.avgSentiment * 100).toFixed(1)}%
+                  </div>
+                  <div className="text-sm text-green-600 font-medium flex items-center">
+                    <ArrowUpRight className="h-3 w-3 mr-1" />
+                    +{(mockMetrics.sentimentChange * 100).toFixed(1)}%
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="font-medium text-gray-900">Avg Sentiment</div>
+                <div className="text-sm text-gray-600">Overall tone</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Secondary Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-indigo-50 rounded-lg">
+                  <MessageSquare className="h-5 w-5 text-indigo-600" />
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-gray-900">
@@ -211,24 +287,187 @@ export default function Overview() {
               </div>
             </div>
 
-            {/* Active Platforms */}
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-orange-50 rounded-lg">
-                  <Target className="h-5 w-5 text-orange-600" />
+                <div className="p-2 bg-teal-50 rounded-lg">
+                  <Target className="h-5 w-5 text-teal-600" />
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-gray-900">
-                    {mockMetrics.activePlatforms}
+                    {mockMetrics.responseRate}%
                   </div>
-                  <div className="text-sm text-gray-500">
-                    platforms
+                  <div className="text-sm text-red-600 font-medium">
+                    {mockMetrics.responseRateChange}%
                   </div>
                 </div>
               </div>
               <div>
-                <div className="font-medium text-gray-900">Active Platforms</div>
-                <div className="text-sm text-gray-600">Being monitored</div>
+                <div className="font-medium text-gray-900">Response Rate</div>
+                <div className="text-sm text-gray-600">Brand mentioned in answers</div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-amber-50 rounded-lg">
+                  <Award className="h-5 w-5 text-amber-600" />
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-gray-900">
+                    #{mockMetrics.competitorRank}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    of {mockMetrics.activePlatforms + 3}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="font-medium text-gray-900">Competitor Rank</div>
+                <div className="text-sm text-gray-600">In your category</div>
+              </div>
+            </div>
+          </div>
+          {/* Platform Performance */}
+          <div className="bg-white rounded-lg border border-gray-200">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Platform Performance</h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Visibility scores across AI platforms for {selectedBrand.name}
+                  </p>
+                </div>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/insights">
+                    View Details
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            
+            <div className="divide-y divide-gray-200">
+              {mockMetrics.platformPerformance.map((platform) => (
+                <div key={platform.platform} className="p-6 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                      <Bot className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-900">{platform.platform}</div>
+                      <div className="text-sm text-gray-600">
+                        {platform.mentions} mentions
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-8 text-right">
+                    <div>
+                      <div className="font-medium text-gray-900">{platform.score}%</div>
+                      <div className="text-sm text-gray-600">visibility score</div>
+                    </div>
+                    <div className={`text-sm font-medium flex items-center ${
+                      platform.change > 0 ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                      {platform.change > 0 ? (
+                        <ArrowUpRight className="h-4 w-4 mr-1" />
+                      ) : (
+                        <ArrowDownRight className="h-4 w-4 mr-1" />
+                      )}
+                      {Math.abs(platform.change)}%
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recent Activity & Top Keywords */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Recent Activity */}
+            <div className="bg-white rounded-lg border border-gray-200">
+              <div className="p-6 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+                <p className="text-sm text-gray-600 mt-1">Latest brand mentions across platforms</p>
+              </div>
+              
+              <div className="divide-y divide-gray-200">
+                {mockMetrics.recentActivity.map((activity, index) => (
+                  <div key={index} className="p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
+                        <Bot className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-sm text-gray-900">{activity.platform}</div>
+                        <div className="text-xs text-gray-600">{activity.time}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-gray-900">
+                        {activity.mentions} mentions
+                      </div>
+                      <div className={`text-xs px-2 py-1 rounded ${
+                        activity.sentiment === 'positive' ? 'bg-green-100 text-green-800' :
+                        activity.sentiment === 'negative' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {activity.sentiment}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="p-4 border-t border-gray-200">
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link href="/conversations">
+                    View All Activity
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Top Keywords */}
+            <div className="bg-white rounded-lg border border-gray-200">
+              <div className="p-6 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">Top Keywords</h3>
+                <p className="text-sm text-gray-600 mt-1">Most mentioned topics related to your brand</p>
+              </div>
+              
+              <div className="p-6">
+                <div className="space-y-4">
+                  {mockMetrics.topKeywords.map((keyword, index) => (
+                    <div key={keyword} className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-medium text-blue-600">
+                          {index + 1}
+                        </div>
+                        <span className="font-medium text-gray-900">{keyword}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-16 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full" 
+                            style={{ width: `${Math.max(20, 100 - index * 20)}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-sm text-gray-500 w-8 text-right">
+                          {Math.max(20, 100 - index * 20)}%
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="p-4 border-t border-gray-200">
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link href="/insights?tab=prompts">
+                    View All Keywords
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
