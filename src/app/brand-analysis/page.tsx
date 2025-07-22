@@ -8,7 +8,7 @@ import { BrandSentimentChart } from '@/components/charts/brand-sentiment-chart'
 import { CompetitorComparisonChart } from '@/components/charts/competitor-comparison-chart'
 import { BrandMentionHeatmap } from '@/components/charts/brand-mention-heatmap'
 import { AnalyticsService, type CompetitorInsight, type MentionTrend } from '@/lib/api/analytics'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
 import { TrendingUp, Users, MessageSquare, Target, Download } from 'lucide-react'
 
@@ -58,6 +58,12 @@ export default function BrandAnalysis() {
   }, [selectedCompany, timeRange, selectedSentiment]) // loadAnalysisData is recreated on each render
 
   const loadCompanies = async () => {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return
+    }
+
     try {
       const { data, error } = await supabase
         .from('companies')
@@ -107,6 +113,12 @@ export default function BrandAnalysis() {
   }
 
   const loadSentimentBreakdown = async () => {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return {}
+    }
+
     const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90
     const startDate = new Date()
     startDate.setDate(startDate.getDate() - days)

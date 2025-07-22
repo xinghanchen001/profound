@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -63,6 +63,13 @@ export default function TestQuery() {
   }, [])
 
   const loadData = async () => {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      setError('Database connection not available')
+      return
+    }
+
     try {
       // Load companies
       const { data: companiesData } = await supabase

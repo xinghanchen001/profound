@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { subDays } from 'date-fns'
 
 export interface ActionItem {
@@ -35,6 +35,12 @@ export class ActionsService {
    * Generate comprehensive insights for a company
    */
   static async generateCompanyInsights(companyId: string): Promise<CompanyInsights> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      throw new Error('Supabase client not initialized')
+    }
+
     try {
       const endDate = new Date()
       const startDate = subDays(endDate, 30)

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { format, subDays, startOfDay, endOfDay } from 'date-fns'
 
 // Analytics interfaces
@@ -106,6 +106,12 @@ export class AnalyticsService {
    * Get metrics for a specific period
    */
   private static async getMetricsForPeriod(companyId: string, startDate: string, endDate: string) {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return this.getEmptyPeriodMetrics()
+    }
+
     // Get brand mentions
     const { data: mentions, error: mentionsError } = await supabase
       .from('brand_mentions')
@@ -191,6 +197,12 @@ export class AnalyticsService {
     const days = this.getTimeRangeDays(timeRange)
     const trends: MentionTrend[] = []
 
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return trends
+    }
+
     try {
       for (let i = days - 1; i >= 0; i--) {
         const date = subDays(new Date(), i)
@@ -244,6 +256,12 @@ export class AnalyticsService {
   static async getPlatformPerformance(companyId: string, timeRange: TimeRange = '30d'): Promise<PlatformPerformance[]> {
     const days = this.getTimeRangeDays(timeRange)
     const startDate = format(subDays(new Date(), days), 'yyyy-MM-dd')
+
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return []
+    }
 
     try {
       const { data: platforms } = await supabase
@@ -313,6 +331,12 @@ export class AnalyticsService {
     const days = this.getTimeRangeDays(timeRange)
     const startDate = format(subDays(new Date(), days), 'yyyy-MM-dd')
 
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return []
+    }
+
     try {
       const { data: keywords } = await supabase
         .from('keywords')
@@ -375,6 +399,12 @@ export class AnalyticsService {
   static async getTopCitationSources(companyId: string, timeRange: TimeRange = '30d'): Promise<CitationSource[]> {
     const days = this.getTimeRangeDays(timeRange)
     const startDate = format(subDays(new Date(), days), 'yyyy-MM-dd')
+
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return []
+    }
 
     try {
       const { data: citations } = await supabase
@@ -459,6 +489,18 @@ export class AnalyticsService {
       averageSentimentChange: 0,
       totalCitations: 0,
       totalCitationsChange: 0,
+      activePlatforms: 0,
+      totalQueries: 0,
+      totalCost: 0
+    }
+  }
+
+  private static getEmptyPeriodMetrics() {
+    return {
+      totalMentions: 0,
+      positiveMentions: 0,
+      averageSentiment: 0,
+      totalCitations: 0,
       activePlatforms: 0,
       totalQueries: 0,
       totalCost: 0

@@ -7,7 +7,7 @@ import { MetricCard } from '@/components/charts/metric-card'
 import { MentionTrendsChart } from '@/components/charts/mention-trends-chart'
 import { PlatformPerformanceChart } from '@/components/charts/platform-performance-chart'
 import { AnalyticsService, type DashboardMetrics, type MentionTrend, type PlatformPerformance, type TopKeyword, type CitationSource } from '@/lib/api/analytics'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
 import { MessageSquare, Target, TrendingUp, DollarSign, Users, Search } from 'lucide-react'
 
@@ -33,6 +33,12 @@ export default function Dashboard() {
   }, [selectedCompany, timeRange]) // loadDashboardData is recreated on each render
 
   const loadCompanies = async () => {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return
+    }
+
     try {
       const { data, error } = await supabase
         .from('companies')
@@ -43,8 +49,8 @@ export default function Dashboard() {
       if (error) throw error
       
       if (data && data.length > 0) {
-        setCompanies(data)
-        setSelectedCompany(data[0].id) // Auto-select first company
+        setCompanies(data as Array<{id: string, name: string}>)
+        setSelectedCompany(data[0].id as string) // Auto-select first company
       }
     } catch (error) {
       console.error('Error loading companies:', error)

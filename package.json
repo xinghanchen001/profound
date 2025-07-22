@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test:types": "tsc --noEmit",
+    "test:lint": "next lint",
+    "test:all": "npm run test:types && npm run test:lint && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.56.0",

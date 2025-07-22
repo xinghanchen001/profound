@@ -13,6 +13,9 @@ export function Header() {
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
+            <Link href="/setup" className="text-sm font-medium hover:text-primary">
+              Setup
+            </Link>
             <Link href="/dashboard" className="text-sm font-medium hover:text-primary">
               Dashboard
             </Link>
@@ -22,17 +25,8 @@ export function Header() {
             <Link href="/conversations" className="text-sm font-medium hover:text-primary">
               Conversations
             </Link>
-            <Link href="/actions" className="text-sm font-medium hover:text-primary">
-              Actions
-            </Link>
-            <Link href="/test-db" className="text-sm font-medium hover:text-primary">
-              Test DB
-            </Link>
             <Link href="/test-query" className="text-sm font-medium hover:text-primary">
               Test Query
-            </Link>
-            <Link href="/settings" className="text-sm font-medium hover:text-primary">
-              Settings
             </Link>
           </nav>
 

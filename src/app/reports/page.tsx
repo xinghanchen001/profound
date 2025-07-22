@@ -7,7 +7,7 @@ import { ReportBuilder } from '@/components/reports/report-builder'
 import { ReportTemplates } from '@/components/reports/report-templates'
 import { ScheduledReports } from '@/components/reports/scheduled-reports'
 import { ReportsService } from '@/lib/api/reports'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
 import { 
   FileText, 

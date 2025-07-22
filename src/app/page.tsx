@@ -23,10 +23,10 @@ export default function Home() {
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <Button size="lg" asChild>
-            <Link href="/test-db">Test Database</Link>
+            <Link href="/setup">Get Started</Link>
           </Button>
-          <Button variant="outline" size="lg">
-            Learn More
+          <Button variant="outline" size="lg" asChild>
+            <Link href="/dashboard">View Dashboard</Link>
           </Button>
         </div>
       </main>

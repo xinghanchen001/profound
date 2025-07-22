@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { aiPlatformManager, type AIPlatformResponse, AIPlatformError } from './ai-platforms'
 import type { QueryTemplate, Company, AIPlatform } from '@/lib/types'
 
@@ -80,6 +80,12 @@ export class QueryEngine {
    * Get query template from database
    */
   async getTemplate(templateId: string): Promise<QueryTemplate | null> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return null
+    }
+
     try {
       const { data, error } = await supabase
         .from('query_templates')
@@ -104,6 +110,12 @@ export class QueryEngine {
    * Get company information
    */
   async getCompany(companyId: string): Promise<Company | null> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return null
+    }
+
     try {
       const { data, error } = await supabase
         .from('companies')
@@ -128,6 +140,12 @@ export class QueryEngine {
    * Get AI platform information
    */
   async getAIPlatforms(platformIds?: string[]): Promise<AIPlatform[]> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return []
+    }
+
     try {
       let query = supabase
         .from('ai_platforms')
@@ -162,6 +180,12 @@ export class QueryEngine {
     queryType: string,
     templateId?: string
   ): Promise<string | null> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return null
+    }
+
     try {
       const { data, error } = await supabase
         .from('ai_queries')
@@ -197,6 +221,12 @@ export class QueryEngine {
     errorMessage?: string,
     cost?: number
   ): Promise<boolean> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return false
+    }
+
     try {
       const updateData: Record<string, unknown> = {
         status,
@@ -238,6 +268,12 @@ export class QueryEngine {
    * Store AI response
    */
   async storeResponse(queryId: string, response: AIPlatformResponse): Promise<string | null> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return null
+    }
+
     try {
       const { data, error } = await supabase
         .from('ai_responses')
@@ -431,6 +467,12 @@ export class QueryEngine {
    * Get query history for a company
    */
   async getQueryHistory(companyId: string, limit: number = 50): Promise<QueryResult[]> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return []
+    }
+
     try {
       const { data, error } = await supabase
         .from('ai_queries')

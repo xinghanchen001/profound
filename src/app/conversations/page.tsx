@@ -6,7 +6,7 @@ import { Footer } from '@/components/layout/footer'
 import { ConversationList } from '@/components/conversations/conversation-list'
 import { ConversationDetail } from '@/components/conversations/conversation-detail'
 import { ConversationFilters } from '@/components/conversations/conversation-filters'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
 import { MessageSquare, Search, Filter, Download } from 'lucide-react'
 
@@ -82,6 +82,12 @@ export default function Conversations() {
   }, [filters]) // loadConversations is recreated on each render
 
   const loadInitialData = async () => {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return
+    }
+
     try {
       // Load companies
       const { data: companiesData } = await supabase
@@ -114,6 +120,12 @@ export default function Conversations() {
 
   const loadConversations = async () => {
     if (!filters.company) return
+
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return
+    }
 
     setLoading(true)
     try {

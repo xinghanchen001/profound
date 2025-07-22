@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: profound-app
+    ports:
+      - "3000:3000"
+    environment:
+      # Add your environment variables here
+      # Example:
+      # - NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+      # - NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+      # - SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+      # - OPENAI_API_KEY=your_openai_api_key
+      # - ANTHROPIC_API_KEY=your_anthropic_api_key
+      - NODE_ENV=production
+    volumes:
+      # Mount local .env file if you prefer to use that for secrets
+      - ./.env:/app/.env:ro
+    restart: unless-stopped
+    networks:
+      - profound-network
+
+  # Development configuration
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: profound-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      # Mount source code for hot reloading in development
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+      - ./next.config.ts:/app/next.config.ts:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./tailwind.config.ts:/app/tailwind.config.ts:ro
+      - ./postcss.config.mjs:/app/postcss.config.mjs:ro
+      # Mount .env file
+      - ./.env:/app/.env:ro
+    command: npm run dev
+    networks:
+      - profound-network
+
+networks:
+  profound-network:
+    driver: bridge

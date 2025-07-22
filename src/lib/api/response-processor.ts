@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import type { AIPlatformResponse } from './ai-platforms'
 import type { BrandMention, Citation } from '@/lib/types'
 
@@ -90,6 +90,12 @@ export class BrandMentionDetector {
     companyId: string,
     text: string
   ): Promise<BrandMention[]> {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return []
+    }
+
     try {
       // Get company keywords
       const { data: keywords, error } = await supabase
@@ -392,6 +398,18 @@ export class ResponseProcessor {
   ): Promise<ProcessingResult> {
     const startTime = Date.now()
     const errors: string[] = []
+    const supabase = getSupabaseClient()
+    
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return {
+        responseId: '',
+        brandMentions: [],
+        citations: [],
+        processingTime: Date.now() - startTime,
+        errors: ['Supabase client not initialized']
+      }
+    }
 
     try {
       // Store the response in database first
@@ -486,6 +504,12 @@ export class ResponseProcessor {
    * Get processed response data
    */
   static async getProcessedResponse(responseId: string) {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return null
+    }
+
     try {
       const { data, error } = await supabase
         .from('ai_responses')

@@ -8,7 +8,7 @@ import { ActionableInsights } from '@/components/actions/actionable-insights'
 import { ContentSuggestions } from '@/components/actions/content-suggestions'
 import { CompetitorActions } from '@/components/actions/competitor-actions'
 import { ActionsService } from '@/lib/api/actions'
-import { supabase } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
 import { 
   Target, 
@@ -69,6 +69,12 @@ export default function Actions() {
   }, [selectedCompany]) // loadCompanyActions is recreated on each render
 
   const loadCompanies = async () => {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      console.error('Supabase client not initialized')
+      return
+    }
+
     try {
       const { data, error } = await supabase
         .from('companies')

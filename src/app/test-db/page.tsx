@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase, type Category, type AIPlatform } from '@/lib/supabase'
+import { getSupabaseClient } from '@/lib/supabase-client'
+import type { Category, AIPlatform } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 
 export default function TestDB() {
@@ -13,6 +14,13 @@ export default function TestDB() {
   const testConnection = async () => {
     setLoading(true)
     setError(null)
+    
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      setError('Supabase client not initialized')
+      setLoading(false)
+      return
+    }
     
     try {
       // Test fetching categories

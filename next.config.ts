@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'standalone',
+  reactStrictMode: true,
+  swcMinify: true,
+  // Optimize images for Docker
+  images: {
+    domains: ['localhost'],
+  },
 };
 
 export default nextConfig;
